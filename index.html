@@ -344,6 +344,18 @@
     </div>
   </footer>
 
+  <!--
+    後端設定（選用）
+    ⚠️ 這裡只能放 Publishable / Anon Key，絕對不能放 Service Role Key 或 DB 密碼。
+    未替換佔位符時，遊戲會自動退回純前端 Demo 模式，不影響遊玩。
+  -->
+  <script>
+    window.__SLOT_BACKEND__ = {
+      url: '<SUPABASE_URL>',
+      publishableKey: '<SUPABASE_PUBLISHABLE_KEY>'
+    };
+  </script>
+  <script src="assets/js/backend.js" defer></script>
   <!-- 遊戲引擎（defer：不阻塞 HTML 解析） -->
   <script src="assets/js/game.js" defer></script>
 </body>

@@ -386,6 +386,9 @@
       this.ctx = canvas.getContext('2d');
       this.audio = new AudioManager();
       this.particles = new ParticlePool(320);
+      this.backend = window.__slotBackend || null;   // 後端客戶端（未設定則為 Demo 模式）
+      this.pendingIndices = null;
+      this.serverResult = null;
 
       this.reels = Array.from({ length: CFG.REEL_COUNT }, (_, i) => new Reel(i));
       this.state = STATE.IDLE;
@@ -456,22 +459,70 @@
         this._toast('籌碼不足，請重置遊戲。');
         return;
       }
-      this.credit -= this.bet;
+      this.credit -= this.bet;              // 樂觀扣款；伺服器回傳後會以權威值覆蓋
       this.winAmount = 0;
       this.lastWin = null;
       this.bigWin = false;
+      this.serverResult = null;
+      this.pendingIndices = null;
       this.state = STATE.SPINNING;
       this._syncUI();
       this._setStatus('滾輪旋轉中…');
       this._setButton(false);
       this.audio.playSpin();
 
-      // ⚠️ 正式環境：此處應向伺服器請求結果，改用伺服器回傳的 stopIndices。
-      //    這裡為了 Demo 自行抽樣（仅表現用）。
-      this.pendingIndices = Array.from({ length: CFG.REEL_COUNT }, () => weightedIndex());
+      if (this.backend && this.backend.available) {
+        // ✅ 正式模式：結果由伺服器 RNG 決定，前端只負責播放
+        this._setStatus('伺服器結算中…');
+        this.backend.spin(this.bet)
+          .then((res) => {
+            if (this.state !== STATE.SPINNING) return;  // 已被重置/中斷
+            this.serverResult = res;
+            this.pendingIndices = res.stopIndices;
+            if (typeof res.credits === 'number') this.credit = res.credits;
+            this._syncUI();
+            // 記錄 roundId，供斷線重連使用
+            try { sessionStorage.setItem('slot:lastRound', res.roundId); } catch (_) {}
+            if (this.stateTimer <= 0) this._beginStopping();
+          })
+          .catch((err) => {
+            console.warn('[slot] 後端不可用，退回 Demo RNG：', err);
+            this._fallbackToDemo();
+          });
+      } else {
+        // Demo 模式：前端自行抽樣（僅供表現，不可用於營運）
+        this.pendingIndices = Array.from({ length: CFG.REEL_COUNT }, () => weightedIndex());
+      }
 
       this.reels.forEach((r) => r.startSpin());
       this.stateTimer = 0.45 + Math.random() * 0.35; // 最短旋轉時間
+    }
+
+    /** 後端失敗時的降級：改用前端 RNG，並提示玩家 */
+    _fallbackToDemo() {
+      if (this.state !== STATE.SPINNING) return;
+      this.serverResult = null;
+      this.pendingIndices = Array.from({ length: CFG.REEL_COUNT }, () => weightedIndex());
+      this._toast('連線不穩，已切換單機模式');
+      if (this.stateTimer <= 0) this._beginStopping();
+    }
+
+    /** 斷線重連：嘗試還原最後一局 */
+    async restoreLastRound() {
+      if (!this.backend || !this.backend.available) return;
+      let roundId = null;
+      try { roundId = sessionStorage.getItem('slot:lastRound'); } catch (_) {}
+      if (!roundId) return;
+      try {
+        const res = await this.backend.restore(roundId);
+        if (res && res.round) {
+          this.credit = this.backend.currentCredits ?? this.credit;
+          this._syncUI();
+          this._toast('已還原上一局結果');
+        }
+      } catch (err) {
+        console.warn('[slot] 還原失敗：', err);
+      }
     }
 
     _beginStopping() {
@@ -487,17 +538,26 @@
 
       let win = 0, combo = 0, sym = null;
       if (a === b && b === c) {
-        win = SYMBOLS[a].pay3 * this.bet;
         combo = 3;
         sym = SYMBOLS[a];
       } else if (a === b || b === c || a === c) {
         // 找出重複的符號，僅有 pay2 者給予兩連獎
         let dup = a === b ? a : (b === c ? b : a);
         if (SYMBOLS[dup].pay2 > 0) {
-          win = SYMBOLS[dup].pay2 * this.bet;
           combo = 2;
           sym = SYMBOLS[dup];
         }
+      }
+
+      if (this.serverResult) {
+        // ✅ 伺服器模式：派彩與餘額以伺服器為唯一真相來源
+        win = this.serverResult.winAmount || 0;
+        if (typeof this.serverResult.credits === 'number') this.credit = this.serverResult.credits;
+      } else {
+        // Demo 模式：僅供前端表現，不可用於營運
+        if (combo === 3 && sym) win = sym.pay3 * this.bet;
+        else if (combo === 2 && sym && sym.pay2 > 0) win = sym.pay2 * this.bet;
+        if (win > 0) this.credit += win;   // Demo 模式才需本地入帳
       }
 
       this.lastWin = { idx, combo, sym, win };
@@ -587,7 +647,8 @@
 
       if (this.state === STATE.SPINNING) {
         this.stateTimer -= dt;
-        if (this.stateTimer <= 0) this._beginStopping();
+        // 必須同時滿足「最短旋轉時間已到」與「已取得結果（伺服器或 Demo）」
+        if (this.stateTimer <= 0 && this.pendingIndices) this._beginStopping();
       } else if (this.state === STATE.STOPPING && allStopped) {
         this._evaluate();
       } else if (this.state === STATE.CELEBRATING) {
@@ -696,7 +757,8 @@
     const canvas = document.getElementById('gameCanvas');
     if (!canvas) return;
     const game = new SlotGame(canvas);
-    window.__slotGame = game; // 方便除錯 / 自动化测试
+    window.__slotGame = game; // 方便除錯 / 自動化測試
+    game.restoreLastRound();  // 斷線重連：嘗試還原最後一局
     const resetBtn = document.getElementById('resetBtn');
     if (resetBtn) resetBtn.addEventListener('click', () => game.reset());
   }
