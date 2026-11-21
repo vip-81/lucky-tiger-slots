@@ -1,0 +1,8 @@
+# https://vip-81.github.io/lucky-tiger-slots/robots.txt
+# 允許所有爬蟲抓取，利於 SEO / GEO 索引
+
+User-agent: *
+Allow: /
+
+# Sitemap 位置（上線時換成真實網域）
+Sitemap: https://vip-81.github.io/lucky-tiger-slots/sitemap.xml

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="金輝虎將老虎機遊戲封面">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+      <stop offset="0" stop-color="#123a5e"/>
+      <stop offset="1" stop-color="#061523"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff9c4"/>
+      <stop offset="0.5" stop-color="#ffd54f"/>
+      <stop offset="1" stop-color="#ff8f00"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="150" font-size="72" font-family="sans-serif" font-weight="900" fill="url(#gold)" text-anchor="middle">🎰 金輝虎將</text>
+  <text x="600" y="210" font-size="30" font-family="sans-serif" fill="#9fb4cc" text-anchor="middle" letter-spacing="6">LUCKY TIGER SLOTS</text>
+
+  <g>
+    <rect x="260" y="270" width="180" height="220" rx="16" fill="#0b2239" stroke="#ffd54f" stroke-width="5"/>
+    <rect x="510" y="270" width="180" height="220" rx="16" fill="#0b2239" stroke="#ffd54f" stroke-width="5"/>
+    <rect x="760" y="270" width="180" height="220" rx="16" fill="#0b2239" stroke="#ffd54f" stroke-width="5"/>
+    <text x="350" y="405" font-size="100" font-family="sans-serif" font-weight="bold" fill="#e53935" text-anchor="middle">7</text>
+    <text x="600" y="405" font-size="100" font-family="sans-serif" font-weight="bold" fill="#e53935" text-anchor="middle">7</text>
+    <text x="850" y="405" font-size="100" font-family="sans-serif" font-weight="bold" fill="#e53935" text-anchor="middle">7</text>
+  </g>
+
+  <text x="600" y="560" font-size="34" font-family="sans-serif" font-weight="700" fill="url(#gold)" text-anchor="middle">免费线上老虎机 · HTML5 · 开源示範</text>
+</svg>

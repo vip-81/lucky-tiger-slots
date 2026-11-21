@@ -1,0 +1,4 @@
+# Cloudflare Pages 專案設定（供 wrangler / Git 整合部署使用）
+name = "lucky-tiger-slots"
+compatibility_date = "2026-11-21"
+pages_build_output_dir = "."

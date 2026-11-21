@@ -1,0 +1,19 @@
+{
+  "name": "金輝虎將 Lucky Tiger Slots",
+  "short_name": "金輝虎將",
+  "description": "輕量級開源 H5 老虎機遊戲",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#061523",
+  "theme_color": "#0b2239",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "/assets/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

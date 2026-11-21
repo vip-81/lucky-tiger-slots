@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <!-- ===================== 基礎.meta ===================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#0b2239">
+  <meta name="color-scheme" content="dark">
+
+  <!-- ===================== 核心 SEO meta ===================== -->
+  <title>金輝虎將 Lucky Tiger Slots｜免費線上老虎機遊戲 - 開源 H5 博弈示範</title>
+  <meta name="description" content="金輝虎將是一款輕量級 HTML5 老虎機遊戲，支援桌機與手機瀏覽器，無需下載即可遊玩。本文介紹遊戲規則、賠率表、技術架構與開源素材來源，適合開發者研究 Canvas 渲染、有限狀態機與 RTP 設計。">
+  <meta name="keywords" content="老虎機,老虎機遊戲,線上老虎機,slots,HTML5 遊戲,Canvas 遊戲,H5 博弈,開源遊戲,博弈遊戲開發,RTP,老虎機賠率,Lucky Tiger Slots">
+  <meta name="author" content="Lucky Tiger Slots 開發團隊">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="https://vip-81.github.io/lucky-tiger-slots/">
+
+  <!-- ===================== Open Graph (Facebook / LINE / 社交分享) ===================== -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="金輝虎將 Lucky Tiger Slots">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:title" content="金輝虎將 Lucky Tiger Slots｜免費線上老虎機遊戲">
+  <meta property="og:description" content="輕量級 HTML5 老虎機遊戲，支援手機與桌機，無需下載。提供賠率表、玩法說明與開源技術架構解析。">
+  <meta property="og:url" content="https://vip-81.github.io/lucky-tiger-slots/">
+  <meta property="og:image" content="https://vip-81.github.io/lucky-tiger-slots/assets/img/og-cover.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="金輝虎將老虎機遊戲畫面，三個滾輪與中獎金幣特效">
+
+  <!-- ===================== Twitter Card ===================== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@luckytigerslots">
+  <meta name="twitter:creator" content="@luckytigerslots">
+  <meta name="twitter:title" content="金輝虎將 Lucky Tiger Slots｜免費線上老虎機遊戲">
+  <meta name="twitter:description" content="輕量級 HTML5 老虎機遊戲，支援手機與桌機，無需下載。提供賠率表、玩法說明與開源技術架構解析。">
+  <meta name="twitter:image" content="https://vip-81.github.io/lucky-tiger-slots/assets/img/og-cover.svg">
+  <meta name="twitter:image:alt" content="金輝虎將老虎機遊戲畫面">
+
+  <!-- ===================== PWA / Icons ===================== -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/og-cover.svg">
+
+  <!-- ===================== 樣式（Inline critical CSS 可再優化 LCP） ===================== -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- ==========================================================================
+       JSON-LD 結構化資料（GEO 核心）
+       同時滿足：搜尋引擎 Rich Results + 生成式引擎 (AI) 摘要與引用。
+       提供多種 Schema：WebSite / SoftwareApplication / FAQPage / BreadcrumbList
+       ========================================================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://vip-81.github.io/lucky-tiger-slots/#website",
+        "url": "https://vip-81.github.io/lucky-tiger-slots/",
+        "name": "金輝虎將 Lucky Tiger Slots",
+        "description": "輕量級開源 H5 老虎機遊戲與博弈開發技術文件站。",
+        "inLanguage": "zh-Hant",
+        "publisher": { "@id": "https://vip-81.github.io/lucky-tiger-slots/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://vip-81.github.io/lucky-tiger-slots/#organization",
+        "name": "Lucky Tiger Slots 開發團隊",
+        "url": "https://vip-81.github.io/lucky-tiger-slots/",
+        "description": "專注於高流暢度 HTML5 博弈遊戲開發的開源團隊。"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://vip-81.github.io/lucky-tiger-slots/#game",
+        "name": "金輝虎將 Lucky Tiger Slots",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any (Web Browser)",
+        "description": "一款無需安裝的 HTML5 老虎機遊戲，使用 Canvas 2D 渲染，支援桌機與行動裝置。包含三滾輪、六種符號、中獎動畫與 Web Audio 音效。",
+        "url": "https://vip-81.github.io/lucky-tiger-slots/",
+        "image": "https://vip-81.github.io/lucky-tiger-slots/assets/img/og-cover.svg",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "TWD"
+        },
+        "featureList": [
+          "三滾輪老虎機玩法",
+          "Canvas 2D 高效渲染",
+          "物件池粒子特效",
+          "Web Audio 即時音效",
+          "RWD 響應式設計",
+          "支援 prefers-reduced-motion 無障礙設定"
+        ],
+        "publisher": { "@id": "https://vip-81.github.io/lucky-tiger-slots/#organization" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://vip-81.github.io/lucky-tiger-slots/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "金輝虎將老虎機要怎麼玩？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "按下「旋轉」按鈕或鍵盤空白鍵即可開始。每次旋轉扣除 10 籌碼，三個滾輪會依序停止。當中獎線上的三個符號相同即為三連中獎，部分符號兩個相同也有兩連獎。中獎籌碼會自動加入餘額。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "遊戲的最高賠率是多少？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "最高賠率為 lucky seven 符號三連，可獲得 100 倍下注籌碼。其次是鑽石 50 倍、金幣 25 倍、鈴鐺 15 倍、櫻桃 10 倍、檸檬 5 倍。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "這款遊戲可以直接用在正式博弈營運嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "不可以。本範例的隨機數使用前端 Math.random()，僅供動畫表現展示。正式博弈營運必須採用伺服器權威架構，由伺服器 RNG 與 RTP 模型決定結果，前端只負責呈現，以確保公平性並防作弊。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "遊戲在手機上可以玩嗎？是否有音效？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。遊戲採用響應式設計，自動適應橫屏與豎屏。音效使用 Web Audio API 即時合成，如需在 iOS Safari 播放，必須先有一次使用者觸控或點擊來解鎖 AudioContext。"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://vip-81.github.io/lucky-tiger-slots/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://vip-81.github.io/lucky-tiger-slots/" },
+          { "@type": "ListItem", "position": 2, "name": "老虎機遊戲", "item": "https://vip-81.github.io/lucky-tiger-slots/#game" },
+          { "@type": "ListItem", "position": 3, "name": "玩法說明", "item": "https://vip-81.github.io/lucky-tiger-slots/#howto" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <!-- ===================== 無障礙：跳至主要內容 ===================== -->
+  <a class="skip-link" href="#main">跳至主要內容</a>
+
+  <!-- ===================== 頁首 ===================== -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="金輝虎將 Lucky Tiger Slots 首頁">
+        <span class="brand-icon" aria-hidden="true">🎰</span>
+        <span class="brand-name">金輝虎將 <small>Lucky Tiger Slots</small></span>
+      </a>
+      <nav class="site-nav" aria-label="主要導覽">
+        <a href="#game">開始遊戲</a>
+        <a href="#howto">玩法說明</a>
+        <a href="#sources">開源資源</a>
+        <a href="#faq">常見問題</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===================== 主要內容 ===================== -->
+  <main id="main" role="main">
+    <div class="container">
+
+      <!-- ---------- Hero 區：可索引的文字內容 ---------- -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">開源 · 輕量 · 跨平台</p>
+          <h1 id="hero-title">金輝虎將：一款流暢又好玩的 HTML5 老虎機</h1>
+          <p class="lead">
+            金輝虎將（Lucky Tiger Slots）是一款純前端的輕量級
+            <strong>線上老虎機遊戲</strong>，採用 HTML5 Canvas 2D 渲染，
+            無需下載或安裝，開啟網頁即可在手機與桌機上遊玩。
+            本站同時分享博弈遊戲的開發架構、賠率設計與開源素材來源，
+            適合開發者研究與學習。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#game">立即試玩</a>
+            <a class="btn btn-ghost" href="#howto">查看玩法</a>
+          </div>
+          <ul class="feature-list" aria-label="遊戲特色">
+            <li>⚡ 60 FPS 流暢動畫</li>
+            <li>📱 手機 / 桌機皆相容</li>
+            <li>🔊 Web Audio 即時音效</li>
+            <li>♿ 支援無障礙設定</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ---------- 遊戲區 ---------- -->
+      <section id="game" class="game-section" aria-labelledby="game-title">
+        <div class="section-head">
+          <h2 id="game-title">開始旋轉</h2>
+          <p>三滾輪、六種符號，按下旋轉看看今天的運氣。</p>
+        </div>
+
+        <div class="game-shell">
+          <!-- Canvas 做為遊戲畫面，提供 aria-label 讓輔助技術理解 -->
+          <canvas
+            id="gameCanvas"
+            class="game-canvas"
+            role="img"
+            aria-label="老虎機遊戲畫面：三個滾輪，中線為中獎線。可按下旋轉按鈕開始遊戲。"></canvas>
+
+          <div class="game-panel" role="group" aria-label="遊戲資訊與控制">
+            <dl class="stats">
+              <div><dt>籌碼</dt><dd id="credit" aria-live="polite">1,000</dd></div>
+              <div><dt>下注</dt><dd id="bet">10</dd></div>
+              <div><dt>本局中獎</dt><dd id="win" aria-live="polite">0</dd></div>
+            </dl>
+            <p id="status" class="status" role="status" aria-live="polite">準備就緒，按下旋轉</p>
+            <div class="controls">
+              <button id="spinBtn" class="btn-spin" type="button">旋轉 (SPIN)</button>
+              <button id="resetBtn" class="btn-reset" type="button">重置籌碼</button>
+            </div>
+            <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+          </div>
+        </div>
+        <p class="game-note">
+          本遊戲為技術示範，使用前端亂數產生結果，<strong>不涉及任何真實金錢博弈</strong>。
+          正式營運請改用伺服器權威架構（詳見常見問題）。
+        </p>
+      </section>
+
+      <!-- ---------- 玩法與賠率說明（GEO 友善的結構化內容） ---------- -->
+      <section id="howto" class="howto-section" aria-labelledby="howto-title">
+        <div class="section-head">
+          <h2 id="howto-title">玩法與賠率說明</h2>
+          <p>清楚了解規則，才能享受遊戲樂趣。</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <h3>如何遊玩</h3>
+            <ol>
+              <li>確認籌碼充足，每次旋轉扣除 10 籌碼。</li>
+              <li>點擊「旋轉」按鈕，或按下鍵盤空白鍵。</li>
+              <li>三個滾輪會由左至右依序停止。</li>
+              <li>中獎線（中線）三個符號相同即為三連中獎。</li>
+              <li>中獎金額自動加入籌碼餘額。</li>
+            </ol>
+          </article>
+
+          <article class="card">
+            <h3>賠率表（Paytable）</h3>
+            <div class="table-wrap">
+              <table>
+                <caption class="sr-only">符號賠率表</caption>
+                <thead>
+                  <tr><th scope="col">符號</th><th scope="col">三連</th><th scope="col">兩連</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>7️⃣ Lucky Seven</td><td>100 倍</td><td>10 倍</td></tr>
+                  <tr><td>💎 鑽石</td><td>50 倍</td><td>5 倍</td></tr>
+                  <tr><td>🪙 金幣</td><td>25 倍</td><td>3 倍</td></tr>
+                  <tr><td>🔔 鈴鐺</td><td>15 倍</td><td>2 倍</td></tr>
+                  <tr><td>🍒 櫻桃</td><td>10 倍</td><td>—</td></tr>
+                  <tr><td>🍋 檸檬</td><td>5 倍</td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ---------- 開源資源來源 ---------- -->
+      <section id="sources" class="sources-section" aria-labelledby="sources-title">
+        <div class="section-head">
+          <h2 id="sources-title">開源遊戲與素材來源</h2>
+          <p>本專案從以下開源社群汲取靈感與技術參考，所有資源皆以各別授權條款為準。</p>
+        </div>
+        <ul class="source-list">
+          <li>
+            <strong>GitHub Topics: Open Source Games</strong>
+            <span>開源遊戲專題彙整，適合尋找可參考的遊戲架構。</span>
+            <a href="https://github.com/topics/open-source-games" rel="noopener noreferrer" target="_blank">前往</a>
+          </li>
+          <li>
+            <strong>GitHub Trending</strong>
+            <span>每日熱門專案，掌握最新 H5 遊戲引擎與工具。</span>
+            <a href="https://github.com/trending" rel="noopener noreferrer" target="_blank">前往</a>
+          </li>
+          <li>
+            <strong>Ludum Dare 組織</strong>
+            <span>知名 Game Jam 活動，大量小型開源遊戲作品。</span>
+            <a href="https://github.com/orgs/LudumDare/repositories" rel="noopener noreferrer" target="_blank">前往</a>
+          </li>
+          <li>
+            <strong>Simple Game Tutorials</strong>
+            <span>友善的遊戲開發教學資源，適合入門與教學。</span>
+            <a href="https://simplegametutorials.github.io/" rel="noopener noreferrer" target="_blank">前往</a>
+          </li>
+          <li>
+            <strong>itch.io — Open Source 標籤</strong>
+            <span>獨立遊戲平台，可依 open-source 標籤篩選作品。</span>
+            <a href="https://itch.io/games/tag-open-source" rel="noopener noreferrer" target="_blank">前往</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ---------- FAQ（GEO：可被 AI 直接摘要的 Q&A） ---------- -->
+      <section id="faq" class="faq-section" aria-labelledby="faq-title">
+        <div class="section-head">
+          <h2 id="faq-title">常見問題</h2>
+          <p>關於遊戲、技術與上線的注意事項。</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>金輝虎將老虎機要怎麼玩？</summary>
+            <p>按下「旋轉」按鈕或鍵盤空白鍵即可開始。每次旋轉扣除 10 籌碼，三個滾輪會依序停止。當中獎線上的三個符號相同即為三連中獎，部分符號兩個相同也有兩連獎。中獎籌碼會自動加入餘額。</p>
+          </details>
+          <details>
+            <summary>遊戲的最高賠率是多少？</summary>
+            <p>最高賠率為 lucky seven 符號三連，可獲得 100 倍下注籌碼。其次是鑽石 50 倍、金幣 25 倍、鈴鐺 15 倍、櫻桃 10 倍、檸檬 5 倍。</p>
+          </details>
+          <details>
+            <summary>這款遊戲可以直接用在正式博弈營運嗎？</summary>
+            <p>不可以。本範例的隨機數使用前端 Math.random()，僅供動畫表現展示。正式博弈營運必須採用伺服器權威架構，由伺服器 RNG 與 RTP 模型決定結果，前端只負責呈現，以確保公平性並防作弊。</p>
+          </details>
+          <details>
+            <summary>遊戲在手機上可以玩嗎？是否有音效？</summary>
+            <p>可以。遊戲採用響應式設計，自動適應橫屏與豎屏。音效使用 Web Audio API 即時合成，如需在 iOS Safari 播放，必須先有一次使用者觸控或點擊來解鎖 AudioContext。</p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===================== 頁尾 ===================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>&copy; 2026 金輝虎將 Lucky Tiger Slots. 開源技術示範專案。</p>
+      <p class="disclaimer">免責聲明：本網站仅供技術研究與娛樂示範，不涉及真實金錢交易，不提供任何投機或投資建議。</p>
+    </div>
+  </footer>
+
+  <!-- 遊戲引擎（defer：不阻塞 HTML 解析） -->
+  <script src="assets/js/game.js" defer></script>
+</body>
+</html>

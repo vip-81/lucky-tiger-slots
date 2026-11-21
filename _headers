@@ -1,0 +1,13 @@
+# Cloudflare Pages 專用標頭設定（放在輸出目錄根，部署時自動生效）
+# 靜態資源：長快取 + immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+# HTML 不快取，確保 SEO 內容即時更新
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Cache-Control: public, max-age=0, must-revalidate
