@@ -2,8 +2,12 @@
 
 一套**零依賴、零建置**的輕量級 HTML5 老虎機遊戲站，內建完整的 SEO / GEO（生成式引擎優化）設計，可直接部署到 **Cloudflare Pages** / Netlify / Vercel / GitHub Pages 等靜態託管平台。
 
-> **目前已上線（Cloudflare Pages）**：https://lucky-tiger-slots.pages.dev/
+> **目前已上線（GitHub Pages）**：https://vip-81.github.io/lucky-tiger-slots/
 > Lighthouse 實測：SEO **100** / Accessibility **100** / Best Practices **100**。
+>
+> 先前亦部署於 Cloudflare Pages：https://lucky-tiger-slots.pages.dev/
+>
+> ⚠️ **canonical / og:url / sitemap 目前指向 GitHub Pages**。若你要重新部署回 Cloudflare（或任何其他平台），請先同步修改 `index.html`、`sitemap.xml`、`robots.txt` 中的網域，再執行部署，避免 SEO 訊號指向錯誤網址。
 
 ---
 
@@ -21,6 +25,8 @@
 ├── _headers                       # Cloudflare Pages 安全/快取標頭
 ├── wrangler.toml                  # Cloudflare Pages 專案設定
 ├── deploy-cloudflare.ps1          # Cloudflare Direct Upload 部署腳本（不含憑證）
+├── deploy-github.ps1              # GitHub Pages 部署腳本（Git Data API，不含憑證）
+├── .nojekyll                      # 停用 Jekyll，確保靜態檔案原樣輸出
 ├── tools/
 │   ├── hash-helper.html           # BLAKE3 hash 重算工具頁
 │   └── _files.js                  # 由本機檔案產生的 base64 資料（可重新產生）
@@ -114,24 +120,40 @@ npx vercel --prod
 ```
 `vercel.json` 已處理 `cleanUrls` 與快取。
 
-### GitHub Pages
-1. 推送到 `main` 分支。
-2. 在 repo → Settings → Pages → Source 選擇「GitHub Actions」。
-3. `.github/workflows/deploy.yml` 會自動部署。
+### GitHub Pages（本次已上線）
+- Repo：`https://github.com/vip-81/lucky-tiger-slots`
+- 網址：`https://vip-81.github.io/lucky-tiger-slots/`
+- Pages 來源：**GitHub Actions**（`build_type = workflow`），由 `.github/workflows/deploy.yml` 部署。
+- 根目錄的 `.nojekyll` 確保靜態檔案不被 Jekyll 處理。
+
+首次部署（或要重新推送檔案）可執行：
+```powershell
+$env:GH_PAT = '<你的 GitHub Token>'
+.\deploy-github.ps1
+```
+腳本會：建立 repo（若不存在）→ 以 Git Data API 建立 blobs/tree/commit → 更新 `main` → 啟用 Pages。
+若手動操作：設定 → Pages → Source 選「GitHub Actions」，推送到 `main` 即自動部署。
 
 ---
 
 ## 五、⚠️ 資安與上線檢查清單（非常重要）
 
-### 0. 【最優先】本次提供的 Cloudflare 憑證必須立即輪替
-本次部署使用的 **Cloudflare API Token、Account ID、R2 Access Key / Secret** 是直接貼在對話中的長期憑證，等於已經外洩。請**現在就到 Cloudflare 後台**：
+### 0. 【最優先】本次提供的所有憑證必須立即輪替
+對話中先後出現了兩組長期憑證，都等於已經外洩：
 
-1. **撤銷並重新產生 API Token**（保留 Pages Write 權限即可）。
-2. **輪替 R2 的 Access Key / Secret**（若該組金鑰仍有在使用）。
-3. 改用新版 token 重新執行部署腳本。
-4. 日後一律透過**環境變數 / Secret 管理服務**提供，不要貼在聊天、Issue、Email 或程式碼中。
+| 憑證 | 輪替位置 |
+|---|---|
+| Cloudflare API Token、Account ID、R2 Access Key / Secret | Cloudflare 後台 → My Profile → API Tokens / R2 |
+| GitHub classic PAT（`ghp_...`）與 fine-grained PAT（`github_pat_...`） | GitHub → Settings → Developer settings → Personal access tokens |
 
-本專案所有部署腳本都**不含任何憑證**，只從 `$env:CF_API_TOKEN`、`$env:CF_ACCOUNT_ID` 讀取。
+其中 **classic PAT 權限極大**（`repo`、`workflow`、`delete_repo`、`admin:org`…），風險最高，請優先撤銷。
+
+**正確做法**：
+1. 立即撤銷舊 token 並重新產生（GitHub 建議改用 fine-grained PAT，僅授權 `lucky-tiger-slots` repo 的 Contents 寫入 + Pages 權限）。
+2. 改用新 token 重新執行部署腳本驗證。
+3. 日後透過**環境變數 / Secret 管理服務**提供，不要貼在聊天、Issue、Email 或程式碼中。
+
+本專案所有部署腳本都**不含任何憑證**，只從 `$env:CF_API_TOKEN` / `$env:CF_ACCOUNT_ID` / `$env:GH_PAT` 讀取。另外，GitHub Actions 部署本身使用 OIDC（`id-token: write`），**不需要 PAT**。
 
 ### 1. 絕對不要把 API token 放進前端
 你提供的 `4k33EiuqqWPzGvMpUev01Q4AMNXhqZFWKmNRDeDj` 看起來是 **itch.io API token**。
